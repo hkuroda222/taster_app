@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import './signup.dart';
 import './login.dart';
 
 class Home extends StatelessWidget {
@@ -49,7 +50,7 @@ class Home extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                       fullscreenDialog: true,
-                      builder: (BuildContext context) => const Login(),
+                      builder: (BuildContext context) => const SignupPage(),
                     ),
                   );
                 }),

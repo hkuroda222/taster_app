@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import './Home.dart';
 import './note.dart';
 
-class Login extends StatefulWidget {
-  const Login({Key? key}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
   @override
-  _LoginPage createState() => _LoginPage();
+  _SignupPage createState() => _SignupPage();
 }
 
-class _LoginPage extends State<Login> {
-  final _auth = FirebaseAuth.instance;
+class _SignupPage extends State<SignupPage> {
   String email = "";
   String password = "";
 
@@ -36,6 +34,7 @@ class _LoginPage extends State<Login> {
                   },
                 )),
 
+
             // パスワードの入力フォーム
             Padding(
               padding: const EdgeInsets.fromLTRB(25.0, 0, 25.0, 10.0),
@@ -54,14 +53,14 @@ class _LoginPage extends State<Login> {
       // 画面下にボタンの配置
       bottomNavigationBar:
 
-      Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
             width: 310,
             child: ElevatedButton(
                 child: const Text(
-                  'ログイン',
+                  '会員登録',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
@@ -69,19 +68,18 @@ class _LoginPage extends State<Login> {
                 ),
                 onPressed: () async {
                   try {
-                    // メール・パスワードでログイン
-                    final user = await _auth.signInWithEmailAndPassword(
+                  // メール・パスワードでユーザー登録
+                    UserCredential userCredential = await auth.createUserWithEmailAndPassword(
                         email: email, password: password);
-                    if (user != null) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Note(title: ''),
-                          ));
-                    }
+                  //遷移処理(現状はホームへ遷移)
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const Note(title: ''),
+                      ));
                   } catch (e) {
-                    // ログインに失敗した場合
-                    print(e);
+                  // ログインに失敗した場合
+                  print(e);
                   }
                 }),
           ),
