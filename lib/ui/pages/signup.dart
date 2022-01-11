@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import './note.dart';
+import './noteList.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -34,7 +34,6 @@ class _SignupPage extends State<SignupPage> {
                   },
                 )),
 
-
             // パスワードの入力フォーム
             Padding(
               padding: const EdgeInsets.fromLTRB(25.0, 0, 25.0, 10.0),
@@ -52,7 +51,6 @@ class _SignupPage extends State<SignupPage> {
 
       // 画面下にボタンの配置
       bottomNavigationBar:
-
           Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
@@ -68,18 +66,19 @@ class _SignupPage extends State<SignupPage> {
                 ),
                 onPressed: () async {
                   try {
-                  // メール・パスワードでユーザー登録
-                    UserCredential userCredential = await auth.createUserWithEmailAndPassword(
-                        email: email, password: password);
-                  //遷移処理(現状はホームへ遷移)
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const Note(title: ''),
-                      ));
+                    // メール・パスワードでユーザー登録
+                    UserCredential userCredential =
+                        await auth.createUserWithEmailAndPassword(
+                            email: email, password: password);
+                    //遷移処理(現状はホームへ遷移)
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NoteList(),
+                        ));
                   } catch (e) {
-                  // ログインに失敗した場合
-                  print(e);
+                    // ログインに失敗した場合
+                    print(e);
                   }
                 }),
           ),

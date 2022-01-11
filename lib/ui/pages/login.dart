@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import './Home.dart';
-import './note.dart';
+import './noteList.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -53,8 +52,7 @@ class _LoginPage extends State<Login> {
 
       // 画面下にボタンの配置
       bottomNavigationBar:
-
-      Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: SizedBox(
@@ -76,7 +74,7 @@ class _LoginPage extends State<Login> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const Note(title: ''),
+                            builder: (context) => const NoteList(),
                           ));
                     }
                   } catch (e) {

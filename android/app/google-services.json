@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "457555352206",
+    "project_id": "taster-app-5db96",
+    "storage_bucket": "taster-app-5db96.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457555352206:android:cf1354c521663b2af247df",
+        "android_client_info": {
+          "package_name": "com.taster.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "457555352206-26eesgiiss2nb1lfl31l34qf1kidfq1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBssSUgjJW6ijbRhxk3gI8sW5MJRdOc4dU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "457555352206-26eesgiiss2nb1lfl31l34qf1kidfq1j.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "457555352206-dpdjaq1v9cofernjrb3fumd2glc892v1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.taster.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
