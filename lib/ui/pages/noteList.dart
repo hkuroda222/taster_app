@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+
+import 'package:intl/intl.dart';
 
 import './addNote.dart';
 
@@ -63,16 +66,25 @@ class _NoteState extends State<NoteList> {
 
   @override
   void initState() {
-    //アプリ起動時に一度だけ実行される
+    //アプリ起動時に一度だけ実行
     getNotes();
   }
 
   void getNotes() async {
-    final snapshot = await FirebaseFirestore.instance.collection('note').get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('note')
+        .orderBy('date', descending: true)
+        .get();
     setState(() {
       documentList = snapshot.docs;
     });
-    print(documentList);
+  }
+
+  //日付を変換
+  String convertToString(Timestamp timestamp) {
+    final datetime = timestamp.toDate();
+    final date = DateFormat('yyyy年MM月dd日').format(datetime);
+    return date;
   }
 
   @override
@@ -103,8 +115,8 @@ class _NoteState extends State<NoteList> {
                 SizedBox(
                   height: 80,
                   width: 80,
-                  child: Image.asset(
-                    '${testData[index]['imagePath']}',
+                  child: Image.network(
+                    '${documentList[index]['image_path']}',
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -112,15 +124,15 @@ class _NoteState extends State<NoteList> {
                   Container(
                     margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                     height: 40,
-                    width: 120,
+                    width: 200,
                     child: Text(
-                        '${testData[index]["distilleryName"]} ${testData[index]["aging"]}年'),
+                        '${documentList[index]["distillery_name"]} ${documentList[index]["aging"]}年'),
                   ),
                   Container(
                       margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
                       height: 20,
-                      width: 120,
-                      child: Text('${testData[index]["date"]}',
+                      width: 200,
+                      child: Text(convertToString(documentList[index]["date"]),
                           textAlign: TextAlign.left)),
                 ]),
               ],

@@ -5,57 +5,10 @@ import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 
-import 'package:intl/intl.dart';
-
 import './noteList.dart';
-
-// Future<String> selectImage(BuildContext context) async {
-//   const String SELECT_ICON = "アイコンを選択";
-//   const List<String> SELECT_ICON_OPTIONS = ["写真から選択", "写真を撮影"];
-//   const int GALLERY = 0;
-//   const int CAMERA = 1;
-//
-//   var _select_type = await showDialog(
-//       context: context,
-//       builder: (BuildContext context) {
-//         return SimpleDialog(
-//           title: Text(SELECT_ICON),
-//           children: SELECT_ICON_OPTIONS.asMap().entries.map((e) {
-//             return SimpleDialogOption(
-//               child: ListTile(
-//                 title: Text(e.value),
-//               ),
-//               onPressed: () => Navigator.of(context).pop(e.key),
-//             );
-//           }).toList(),
-//         );
-//       });
-//
-//   final picker = ImagePicker();
-//   var _img_src;
-//
-//   if (_select_type == null) {
-//     return '';
-//   }
-// //カメラで撮影
-//   else if (_select_type == CAMERA) {
-//     _img_src = ImageSource.camera;
-//   }
-// //ギャラリーから選択
-//   else if (_select_type == GALLERY) {
-//     _img_src = ImageSource.gallery;
-//   }
-//
-//   final pickedFile = await picker.getImage(source: _img_src);
-//
-//   if (pickedFile == null) {
-//     return '';
-//   } else {
-//     return pickedFile.path;
-//   }
-// }
 
 // Future<void> uploadFile(String sourcePath, String uploadFileName) async {
 //   final FirebaseStorage storage = FirebaseStorage.instance;
@@ -89,46 +42,32 @@ class _AddNote extends State<AddNote> {
   // String bottled = "";
   String region = "";
   // String bottlers = "";
-  String date = "";
+  Timestamp date = Timestamp.now();
   // String howToDrink = "";
   String nose = "";
   String taste = "";
   String finish = "";
   String comment = "";
 
-  // late File _image;
-  // final picker = ImagePicker();
-  //
-  // //カメラ用
-  // Future getImageFromCamera() async {
-  //   final pickedFile = await picker.getImage(source: ImageSource.camera);
-  //
-  //   setState(() {
-  //     if (pickedFile != null) {
-  //       _image = File(pickedFile.path);
-  //     } else {
-  //       print('No image selected.');
-  //     }
-  //   });
-  // }
-  //
-  // //写真ライブラリの読み込み用
-  // Future _getImage() async {
-  //   final pickedFile = await picker.getImage(source: ImageSource.gallery);
-  //
-  //   setState(() {
-  //     if (pickedFile != null) {
-  //       _image = File(pickedFile.path);
-  //     } else {
-  //       print('No image selected.');
-  //     }
-  //   });
-  // }
-
-  final ImagePicker _picker = ImagePicker();
-  File? _file;
+  File? _image;
+  final picker = ImagePicker();
 
   TextEditingController dateinput = TextEditingController();
+
+  //ギャラリーから画像を選択
+  Future getImageFromGallery() async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = File(pickedFile!.path);
+    });
+    print('--------------------------');
+    print('--------------------------');
+    print('--------------------------');
+    print(_image);
+    print('--------------------------');
+    print('--------------------------');
+    print('--------------------------');
+  }
 
   @override
   void initState() {
@@ -157,29 +96,42 @@ class _AddNote extends State<AddNote> {
               const SizedBox(
                 height: 30,
               ),
-              OutlinedButton(
-                  onPressed: () async {
-                    final XFile? _image =
-                        await _picker.pickImage(source: ImageSource.gallery);
-                    _file = File(_image!.path);
-                    setState(() {});
-                  },
-                  child: const Text('画像を選択')),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-              //   children: [
-              //     FloatingActionButton(
-              //       heroTag: "btn2",
-              //       onPressed: () async {
-              //         final XFile? _image =
-              //             await _picker.pickImage(source: ImageSource.gallery);
-              //         _file = File(_image!.path);
-              //         setState(() {});
-              //       },
-              //       child: const Icon(Icons.image),
-              //     ),
-              //   ],
-              // ),
+              (() {
+                if (_image != null) {
+                  return GestureDetector(
+                      onTap: () {
+                        getImageFromGallery();
+                      },
+                      child: SizedBox(
+                        height: 300,
+                        width: 300,
+                        child: Image.file(
+                          _image!,
+                          fit: BoxFit.cover,
+                        ),
+                      ));
+                } else {
+                  return InkWell(
+                      onTap: () {
+                        getImageFromGallery();
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey),
+                        ),
+                        height: 300,
+                        width: 300,
+                        child: const Icon(
+                          Icons.add_a_photo,
+                          size: 40,
+                          color: Colors.grey,
+                        ),
+                      ));
+                }
+              })(),
+              const SizedBox(
+                height: 10,
+              ),
               Padding(
                   padding: const EdgeInsets.fromLTRB(25.0, 0, 25.0, 0),
                   child: TextFormField(
@@ -218,7 +170,7 @@ class _AddNote extends State<AddNote> {
                         locale: const Locale("ja"),
                         initialDate: DateTime.now(),
                         firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
+                        lastDate: DateTime(2030),
                         builder: (context, child) {
                           return Theme(
                             data: Theme.of(context).copyWith(
@@ -234,8 +186,13 @@ class _AddNote extends State<AddNote> {
                           DateFormat('yyyy年MM月dd日').format(pickedDate);
                       setState(() {
                         dateinput.text = formattedDate;
-                        print(pickedDate);
                       });
+                      //timestamp型に変換
+                      final test = Timestamp.fromDate(pickedDate);
+                      final test2 =
+                          DateFormat('yyyy年MM月dd日').format(test.toDate());
+                      print(test2);
+                      date = test;
                     }
                   },
                 ),
@@ -367,7 +324,8 @@ class _AddNote extends State<AddNote> {
                     };
                     FirebaseFirestore.instance
                         .collection('note')
-                        .add(insertData);
+                        .doc()
+                        .set(insertData);
 
                     Navigator.push(
                         context,
