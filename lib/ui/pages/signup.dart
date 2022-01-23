@@ -70,7 +70,6 @@ class _SignupPage extends State<SignupPage> {
                     UserCredential userCredential =
                         await auth.createUserWithEmailAndPassword(
                             email: email, password: password);
-                    //遷移処理(現状はホームへ遷移)
                     Navigator.push(
                         context,
                         MaterialPageRoute(

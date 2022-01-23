@@ -7,23 +7,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:uuid/uuid.dart';
 
 import './noteList.dart';
-
-// Future<void> uploadFile(String sourcePath, String uploadFileName) async {
-//   final FirebaseStorage storage = FirebaseStorage.instance;
-//   Reference ref = storage.ref().child("images"); //保存するフォルダ
-//
-//   io.File file = io.File(sourcePath);
-//   UploadTask task = ref.child(uploadFileName).putFile(file);
-//
-//   try {
-//     var snapshot = await task;
-//   } catch (e) {
-//     //エラー処理
-//     print(e);
-//   }
-// }
 
 class AddNote extends StatefulWidget {
   const AddNote({Key? key}) : super(key: key);
@@ -36,6 +22,7 @@ class _AddNote extends State<AddNote> {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   String imagePath = "";
+  String pickedImagePath = "";
   String distilleryName = "";
   String aging = "";
   // String vintage = "";
@@ -57,16 +44,24 @@ class _AddNote extends State<AddNote> {
   //ギャラリーから画像を選択
   Future getImageFromGallery() async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
     setState(() {
       _image = File(pickedFile!.path);
+      pickedImagePath = pickedFile.path;
     });
-    print('--------------------------');
-    print('--------------------------');
-    print('--------------------------');
-    print(_image);
-    print('--------------------------');
-    print('--------------------------');
-    print('--------------------------');
+  }
+
+  //storageに画像をアップロード
+  Future<void> uploadFile() async {
+    final FirebaseStorage storage = FirebaseStorage.instance;
+    File file = File(pickedImagePath);
+    const uuid = Uuid();
+    Reference ref = storage.ref().child("images").child(uuid.v4());
+
+    final storedImage = await ref.putFile(file);
+    final imageURL = await storedImage.ref.getDownloadURL();
+
+    imagePath = imageURL;
   }
 
   @override
@@ -169,7 +164,7 @@ class _AddNote extends State<AddNote> {
                         context: context,
                         locale: const Locale("ja"),
                         initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
+                        firstDate: DateTime(2010),
                         lastDate: DateTime(2030),
                         builder: (context, child) {
                           return Theme(
@@ -191,7 +186,6 @@ class _AddNote extends State<AddNote> {
                       final test = Timestamp.fromDate(pickedDate);
                       final test2 =
                           DateFormat('yyyy年MM月dd日').format(test.toDate());
-                      print(test2);
                       date = test;
                     }
                   },
@@ -311,6 +305,7 @@ class _AddNote extends State<AddNote> {
                 ),
                 onPressed: () async {
                   try {
+                    await uploadFile();
                     Map<String, dynamic> insertData = {
                       'distillery_name': distilleryName,
                       'aging': aging,
