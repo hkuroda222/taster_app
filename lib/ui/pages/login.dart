@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import './noteList.dart';
 
+import '../../bloc/firebase.dart';
+
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
   @override
@@ -63,13 +65,11 @@ class _LoginPage extends State<Login> {
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.grey, //ボタンの背景色
+                  primary: Colors.grey,
                 ),
                 onPressed: () async {
                   try {
-                    // メール・パスワードでログイン
-                    final user = await _auth.signInWithEmailAndPassword(
-                        email: email, password: password);
+                    final user = await signInByMailAndPass(email, password);
                     if (user != null) {
                       Navigator.push(
                           context,
@@ -79,7 +79,9 @@ class _LoginPage extends State<Login> {
                     }
                   } catch (e) {
                     // ログインに失敗した場合
+                    print('---------------------');
                     print(e);
+                    print('---------------------');
                   }
                 }),
           ),
