@@ -1,58 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:intl/intl.dart';
 
 import './addNote.dart';
-
-const testData = [
-  {
-    'distilleryName': "ラフロイグ",
-    'aging': "33",
-    'region': "アイラ",
-    'date': "2021.12.31",
-    'nose': "",
-    'taste': "",
-    'finish': "",
-    'comment': "",
-    'imagePath': 'images/sample2.jpg'
-  },
-  {
-    'distilleryName': "ダルユーイン",
-    'aging': "21",
-    'region': "スペイサイド",
-    'date': "2021.12.05",
-    'nose': "",
-    'taste': "",
-    'finish': "",
-    'comment': "",
-    'imagePath': 'images/sample3.jpg'
-  },
-  {
-    'distilleryName': "タリスカー",
-    'aging': "19",
-    'region': "アイランズ",
-    'date': "2021.08.15",
-    'nose': "",
-    'taste': "",
-    'finish': "",
-    'comment': "",
-    'imagePath': 'images/sample4.jpg'
-  },
-  {
-    'distilleryName': "ダルユーイン",
-    'aging': "46",
-    'region': "スペイサイド",
-    'date': "2021.04.05",
-    'nose': "",
-    'taste': "",
-    'finish': "",
-    'comment': "",
-    'imagePath': 'images/sample1.jpg'
-  },
-];
+import './noteDetail.dart';
 
 class NoteList extends StatefulWidget {
   const NoteList({Key? key}) : super(key: key);
@@ -66,7 +19,7 @@ class _NoteState extends State<NoteList> {
 
   @override
   void initState() {
-    //アプリ起動時に一度だけ実行
+    super.initState();
     getNotes();
   }
 
@@ -110,40 +63,50 @@ class _NoteState extends State<NoteList> {
             return ListView.builder(
               itemCount: documentList.length,
               itemBuilder: (BuildContext context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  // padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 80,
-                        width: 80,
-                        child: Image.network(
-                          '${documentList[index]['image_path']}',
-                          fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              NoteDetail(documentList[index].id),
+                        ));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    // padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: Image.network(
+                            '${documentList[index]['image_path']}',
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      Column(children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          height: 40,
-                          width: 200,
-                          child: Text(
-                              '${documentList[index]["distillery_name"]} ${documentList[index]["aging"]}年'),
-                        ),
-                        Container(
+                        Column(children: <Widget>[
+                          Container(
                             margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            height: 20,
+                            height: 40,
                             width: 200,
                             child: Text(
-                                convertToString(documentList[index]["date"]),
-                                textAlign: TextAlign.left)),
-                      ]),
-                    ],
+                                '${documentList[index]["distillery_name"]} ${documentList[index]["aging"]}年'),
+                          ),
+                          Container(
+                              margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              height: 20,
+                              width: 200,
+                              child: Text(
+                                  convertToString(documentList[index]["date"]),
+                                  textAlign: TextAlign.left)),
+                        ]),
+                      ],
+                    ),
                   ),
                 );
               },

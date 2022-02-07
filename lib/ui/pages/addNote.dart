@@ -160,7 +160,7 @@ class _AddNote extends State<AddNote> {
                   decoration: const InputDecoration(labelText: "飲んだ日付"),
                   readOnly: true,
                   onTap: () async {
-                    var pickedDate = await showDatePicker(
+                    final pickedDate = await showDatePicker(
                         context: context,
                         locale: const Locale("ja"),
                         initialDate: DateTime.now(),
