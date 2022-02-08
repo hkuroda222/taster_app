@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import './noteEdit.dart';
 
+import './home.dart';
 import '../../model/noteModel.dart';
 
 import '../../bloc/firebase.dart';
@@ -26,9 +27,39 @@ class NoteDetail extends StatelessWidget {
         title: const Text('ノート詳細'),
         backgroundColor: Colors.grey,
         centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-        ],
+        // actions: [
+        //   IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
+        // ],
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            const SizedBox(
+              height: 100,
+              child: DrawerHeader(
+                child: Text('Menu'),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            ListTile(
+                leading: const Icon(Icons.account_circle),
+                title: const Text("アカウント情報"),
+                onTap: () => print('test')),
+            ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text("ログアウト"),
+                onTap: () => {
+                      signOut(),
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                          ))
+                    }),
+          ],
+        ),
       ),
       body: Container(
         child: StreamBuilder(

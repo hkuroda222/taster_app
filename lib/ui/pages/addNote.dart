@@ -78,10 +78,6 @@ class _AddNote extends State<AddNote> {
         title: const Text('新規登録'),
         backgroundColor: Colors.grey,
         centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-        ],
       ),
       body: Center(
         child: SingleChildScrollView(

@@ -16,6 +16,11 @@ Future signInByMailAndPass(email, password) async {
   return user;
 }
 
+//サインアウト
+void signOut() {
+  auth.signOut();
+}
+
 //ドキュメント削除
 void deleteData(String collection, String documentId) {
   firestore.collection(collection).doc(documentId).delete();

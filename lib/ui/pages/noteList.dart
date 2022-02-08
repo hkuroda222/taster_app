@@ -4,6 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:intl/intl.dart';
 
+import '../../bloc/firebase.dart';
+
+import './home.dart';
+import './account.dart';
 import './addNote.dart';
 import './noteDetail.dart';
 
@@ -47,11 +51,41 @@ class _NoteState extends State<NoteList> {
         title: const Text('ノート一覧'),
         backgroundColor: Colors.grey,
         centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-        ],
         automaticallyImplyLeading: false,
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            const SizedBox(
+              height: 100,
+              child: DrawerHeader(
+                child: Text('Menu'),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            ListTile(
+                leading: const Icon(Icons.account_circle),
+                title: const Text("アカウント情報"),
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Account(),
+                    ))),
+            ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text("ログアウト"),
+                onTap: () => {
+                      signOut(),
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                          ))
+                    }),
+          ],
+        ),
       ),
       body: Container(
         child: StreamBuilder<QuerySnapshot>(
