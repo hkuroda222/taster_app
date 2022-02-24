@@ -8,12 +8,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import './noteEdit.dart';
 
 import './home.dart';
-import '../../model/noteModel.dart';
+import './noteList.dart';
+import './account.dart';
+// import '../../model/noteModel.dart';
 
 import '../../bloc/firebase.dart';
 
-final StateNotifierProvider taskListProvider =
-    StateNotifierProvider((ref) => NoteList());
+// final StateNotifierProvider taskListProvider =
+//     StateNotifierProvider((ref) => NoteList());
 
 class NoteDetail extends StatelessWidget {
   NoteDetail(this.id, {Key? key}) : super(key: key);
@@ -30,36 +32,6 @@ class NoteDetail extends StatelessWidget {
         // actions: [
         //   IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
         // ],
-      ),
-      endDrawer: Drawer(
-        child: ListView(
-          children: <Widget>[
-            const SizedBox(
-              height: 100,
-              child: DrawerHeader(
-                child: Text('Menu'),
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                ),
-              ),
-            ),
-            ListTile(
-                leading: const Icon(Icons.account_circle),
-                title: const Text("アカウント情報"),
-                onTap: () => print('test')),
-            ListTile(
-                leading: const Icon(Icons.logout),
-                title: const Text("ログアウト"),
-                onTap: () => {
-                      signOut(),
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const Home(),
-                          ))
-                    }),
-          ],
-        ),
       ),
       body: Container(
         child: StreamBuilder(
@@ -220,8 +192,8 @@ class NoteDetail extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: SizedBox(
-                width: 150,
-                child: ElevatedButton(
+                  width: 150,
+                  child: ElevatedButton(
                     child: const Text(
                       '削除',
                       style: TextStyle(fontWeight: FontWeight.bold),
@@ -230,9 +202,38 @@ class NoteDetail extends StatelessWidget {
                       primary: Colors.red,
                     ),
                     onPressed: () async {
-                      deleteData('note', id);
-                    }),
-              ),
+                      var result = await showDialog<int>(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            content: const Text('本当に削除しますか？'),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                child: const Text('キャンセル'),
+                                onPressed: () => Navigator.of(context).pop(1),
+                              ),
+                              ElevatedButton(
+                                child: const Text('削除'),
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.red,
+                                ),
+                                onPressed: () => () async {
+                                  deleteData('note', id);
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const NoteList(),
+                                      ));
+                                  Navigator.of(context).pop(0);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
+                  )),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),

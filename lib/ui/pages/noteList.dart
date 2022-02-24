@@ -57,7 +57,74 @@ class _NoteState extends State<NoteList> {
         child: ListView(
           children: <Widget>[
             const SizedBox(
-              height: 100,
+              height: 64,
+              child: DrawerHeader(
+                child: Text('Profile'),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            Container(
+              width: 110,
+              height: 110,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      fit: BoxFit.contain,
+                      image: AssetImage("images/user.jpg"))),
+            ),
+            SizedBox(
+              height: 30,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    child: const Text('ユーザー名'),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: const Text('test2'),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    child: const Text('生年月日'),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 24),
+                    child: const Text('1991/01/12'),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    child: const Text('性別'),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 53),
+                    child: const Text('男性'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const SizedBox(
+              height: 64,
               child: DrawerHeader(
                 child: Text('Menu'),
                 decoration: BoxDecoration(
@@ -66,23 +133,38 @@ class _NoteState extends State<NoteList> {
               ),
             ),
             ListTile(
-                leading: const Icon(Icons.account_circle),
-                title: const Text("アカウント情報"),
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const Account(),
-                    ))),
+                leading: const Icon(Icons.mail),
+                title: const Text("メールアドレス変更"),
+                onTap: () => {
+                      // signOut(),
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => const Home(),
+                      //     ))
+                    }),
+            ListTile(
+                leading: const Icon(Icons.enhanced_encryption),
+                title: const Text("パスワード変更"),
+                onTap: () => {
+                      // signOut(),
+                      // Navigator.push(
+                      //     context,
+                      //     MaterialPageRoute(
+                      //       builder: (context) => const Home(),
+                      //     ))
+                    }),
             ListTile(
                 leading: const Icon(Icons.logout),
                 title: const Text("ログアウト"),
                 onTap: () => {
                       signOut(),
-                      Navigator.push(
+                      Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const Home(),
-                          ))
+                          ),
+                          (_) => false)
                     }),
           ],
         ),

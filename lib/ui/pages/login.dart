@@ -21,72 +21,75 @@ class _LoginPage extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            // メールアドレスの入力フォーム
-            Padding(
-                padding: const EdgeInsets.fromLTRB(25.0, 0, 25.0, 0),
+    return WillPopScope(
+      onWillPop: _willPopCallback,
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                  padding: const EdgeInsets.fromLTRB(25.0, 0, 25.0, 0),
+                  child: TextFormField(
+                    decoration: const InputDecoration(labelText: "メールアドレス"),
+                    onChanged: (String value) {
+                      email = value;
+                    },
+                  )),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(25.0, 0, 25.0, 10.0),
                 child: TextFormField(
-                  decoration: const InputDecoration(labelText: "メールアドレス"),
+                  decoration: const InputDecoration(labelText: "パスワード"),
+                  obscureText: true, // パスワードが見えないようにする
                   onChanged: (String value) {
-                    email = value;
+                    password = value;
                   },
-                )),
-
-            // パスワードの入力フォーム
-            Padding(
-              padding: const EdgeInsets.fromLTRB(25.0, 0, 25.0, 10.0),
-              child: TextFormField(
-                decoration: const InputDecoration(labelText: "パスワード"),
-                obscureText: true, // パスワードが見えないようにする
-                onChanged: (String value) {
-                  password = value;
-                },
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
-
-      // 画面下にボタンの配置
-      bottomNavigationBar:
-          Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SizedBox(
-            width: 310,
-            child: ElevatedButton(
-                child: const Text(
-                  'ログイン',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.grey,
-                ),
-                onPressed: () async {
-                  try {
-                    final user = await signInByMailAndPass(email, password);
-                    if (user != null) {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const NoteList(),
-                          ));
-                    }
-                  } catch (e) {
-                    // ログインに失敗した場合
-                    print('---------------------');
-                    print(e);
-                    print('---------------------');
-                  }
-                }),
+            ],
           ),
         ),
-      ]),
+        bottomNavigationBar:
+            Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SizedBox(
+              width: 310,
+              child: ElevatedButton(
+                  child: const Text(
+                    'ログイン',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.grey,
+                  ),
+                  onPressed: () async {
+                    try {
+                      final user = await signInByMailAndPass(email, password);
+                      if (user != null) {
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const NoteList(),
+                            ),
+                            (_) => false);
+                      }
+                    } catch (e) {
+                      // ログインに失敗した場合
+                      print('---------------------');
+                      print(e);
+                      print('---------------------');
+                    }
+                  }),
+            ),
+          ),
+        ]),
+      ),
     );
+  }
+
+  Future<bool> _willPopCallback() async {
+    return true;
   }
 }

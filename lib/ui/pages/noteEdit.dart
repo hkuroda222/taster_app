@@ -87,9 +87,6 @@ class _NoteEdit extends State<NoteEdit> {
         title: const Text('編集'),
         backgroundColor: Colors.grey,
         centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-        ],
       ),
       body: Center(
         child: StreamBuilder(

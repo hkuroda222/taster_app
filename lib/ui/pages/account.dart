@@ -24,9 +24,6 @@ class _AccountState extends State<Account> {
         backgroundColor: Colors.grey,
         centerTitle: true,
         automaticallyImplyLeading: true,
-        // actions: [
-        //   IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-        // ],
       ),
       endDrawer: Drawer(
         child: ListView(
@@ -59,7 +56,19 @@ class _AccountState extends State<Account> {
         ),
       ),
       body: Container(
-        child: const Text('アカウント情報'),
+        child: ListView(
+          children: [
+            Container(
+              width: 100,
+              height: 100,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      fit: BoxFit.contain,
+                      image: AssetImage("images/user.jpg"))),
+            ),
+          ],
+        ),
       ), // Thi
     );
   }
