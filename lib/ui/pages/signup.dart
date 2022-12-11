@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import './noteList.dart';
+import '../../bloc/firebase.dart';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -67,9 +68,10 @@ class _SignupPage extends State<SignupPage> {
                 onPressed: () async {
                   try {
                     // メール・パスワードでユーザー登録
-                    UserCredential userCredential =
-                        await auth.createUserWithEmailAndPassword(
-                            email: email, password: password);
+                    // UserCredential userCredential =
+                    //     await auth.createUserWithEmailAndPassword(
+                    //         email: email, password: password);
+                    signUpByMailAndPass(email, password);
                     Navigator.push(
                         context,
                         MaterialPageRoute(

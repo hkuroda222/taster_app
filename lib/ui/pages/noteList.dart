@@ -1,58 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 import 'package:intl/intl.dart';
 
-import './addNote.dart';
+import '../../bloc/firebase.dart';
 
-const testData = [
-  {
-    'distilleryName': "ラフロイグ",
-    'aging': "33",
-    'region': "アイラ",
-    'date': "2021.12.31",
-    'nose': "",
-    'taste': "",
-    'finish': "",
-    'comment': "",
-    'imagePath': 'images/sample2.jpg'
-  },
-  {
-    'distilleryName': "ダルユーイン",
-    'aging': "21",
-    'region': "スペイサイド",
-    'date': "2021.12.05",
-    'nose': "",
-    'taste': "",
-    'finish': "",
-    'comment': "",
-    'imagePath': 'images/sample3.jpg'
-  },
-  {
-    'distilleryName': "タリスカー",
-    'aging': "19",
-    'region': "アイランズ",
-    'date': "2021.08.15",
-    'nose': "",
-    'taste': "",
-    'finish': "",
-    'comment': "",
-    'imagePath': 'images/sample4.jpg'
-  },
-  {
-    'distilleryName': "ダルユーイン",
-    'aging': "46",
-    'region': "スペイサイド",
-    'date': "2021.04.05",
-    'nose': "",
-    'taste': "",
-    'finish': "",
-    'comment': "",
-    'imagePath': 'images/sample1.jpg'
-  },
-];
+import './home.dart';
+import './addNote.dart';
+import './noteDetail.dart';
+import './changeEmail.dart';
+import './changePassword.dart';
 
 class NoteList extends StatefulWidget {
   const NoteList({Key? key}) : super(key: key);
@@ -66,7 +24,7 @@ class _NoteState extends State<NoteList> {
 
   @override
   void initState() {
-    //アプリ起動時に一度だけ実行
+    super.initState();
     getNotes();
   }
 
@@ -94,11 +52,121 @@ class _NoteState extends State<NoteList> {
         title: const Text('ノート一覧'),
         backgroundColor: Colors.grey,
         centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-        ],
         automaticallyImplyLeading: false,
+      ),
+      endDrawer: Drawer(
+        child: ListView(
+          children: <Widget>[
+            const SizedBox(
+              height: 64,
+              child: DrawerHeader(
+                child: Text('Profile'),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            Container(
+              width: 110,
+              height: 110,
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  image: DecorationImage(
+                      fit: BoxFit.contain,
+                      image: AssetImage("images/user.jpg"))),
+            ),
+            SizedBox(
+              height: 30,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    child: const Text('ユーザー名'),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 10),
+                    child: const Text('test2'),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    child: const Text('生年月日'),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 24),
+                    child: const Text('1994/04/05'),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+              child: Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    child: const Text('性別'),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.only(left: 53),
+                    child: const Text('男性'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const SizedBox(
+              height: 64,
+              child: DrawerHeader(
+                child: Text('Menu'),
+                decoration: BoxDecoration(
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+            ListTile(
+                leading: const Icon(Icons.mail),
+                title: const Text("メールアドレス変更"),
+                onTap: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChangeEmail(),
+                          ))
+                    }),
+            ListTile(
+                leading: const Icon(Icons.enhanced_encryption),
+                title: const Text("パスワード変更"),
+                onTap: () => {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChangePassword(),
+                          ))
+                    }),
+            ListTile(
+                leading: const Icon(Icons.logout),
+                title: const Text("ログアウト"),
+                onTap: () => {
+                      signOut(),
+                      Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Home(),
+                          ),
+                          (_) => false)
+                    }),
+          ],
+        ),
       ),
       body: Container(
         child: StreamBuilder<QuerySnapshot>(
@@ -110,40 +178,50 @@ class _NoteState extends State<NoteList> {
             return ListView.builder(
               itemCount: documentList.length,
               itemBuilder: (BuildContext context, index) {
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                  ),
-                  margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                  // padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(
-                        height: 80,
-                        width: 80,
-                        child: Image.network(
-                          '${documentList[index]['image_path']}',
-                          fit: BoxFit.cover,
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              NoteDetail(documentList[index].id),
+                        ));
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
+                    ),
+                    margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    // padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: Image.network(
+                            '${documentList[index]['image_path']}',
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
-                      Column(children: <Widget>[
-                        Container(
-                          margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                          height: 40,
-                          width: 200,
-                          child: Text(
-                              '${documentList[index]["distillery_name"]} ${documentList[index]["aging"]}年'),
-                        ),
-                        Container(
+                        Column(children: <Widget>[
+                          Container(
                             margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            height: 20,
+                            height: 40,
                             width: 200,
                             child: Text(
-                                convertToString(documentList[index]["date"]),
-                                textAlign: TextAlign.left)),
-                      ]),
-                    ],
+                                '${documentList[index]["distillery_name"]} ${documentList[index]["aging"]}年'),
+                          ),
+                          Container(
+                              margin: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                              height: 20,
+                              width: 200,
+                              child: Text(
+                                  convertToString(documentList[index]["date"]),
+                                  textAlign: TextAlign.left)),
+                        ]),
+                      ],
+                    ),
                   ),
                 );
               },

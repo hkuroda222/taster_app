@@ -78,10 +78,6 @@ class _AddNote extends State<AddNote> {
         title: const Text('新規登録'),
         backgroundColor: Colors.grey,
         centerTitle: true,
-        actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-          IconButton(icon: const Icon(Icons.menu), onPressed: () {}),
-        ],
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -160,7 +156,7 @@ class _AddNote extends State<AddNote> {
                   decoration: const InputDecoration(labelText: "飲んだ日付"),
                   readOnly: true,
                   onTap: () async {
-                    var pickedDate = await showDatePicker(
+                    final pickedDate = await showDatePicker(
                         context: context,
                         locale: const Locale("ja"),
                         initialDate: DateTime.now(),
