@@ -16,6 +16,18 @@ Future signInByMailAndPass(email, password) async {
   return user;
 }
 
+//メールアドレス変更
+Future<void> updateEmail(email) async {
+  final user = auth.currentUser;
+  await user?.updateEmail(email);
+}
+
+//メールアドレス変更
+Future<void> updatePassword(pass) async {
+  final user = auth.currentUser;
+  await user?.updatePassword(pass);
+}
+
 //サインアウト
 void signOut() {
   auth.signOut();

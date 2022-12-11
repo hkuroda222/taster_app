@@ -7,9 +7,10 @@ import 'package:intl/intl.dart';
 import '../../bloc/firebase.dart';
 
 import './home.dart';
-import './account.dart';
 import './addNote.dart';
 import './noteDetail.dart';
+import './changeEmail.dart';
+import './changePassword.dart';
 
 class NoteList extends StatefulWidget {
   const NoteList({Key? key}) : super(key: key);
@@ -100,7 +101,7 @@ class _NoteState extends State<NoteList> {
                   ),
                   Container(
                     margin: const EdgeInsets.only(left: 24),
-                    child: const Text('1991/01/12'),
+                    child: const Text('1994/04/05'),
                   ),
                 ],
               ),
@@ -136,23 +137,21 @@ class _NoteState extends State<NoteList> {
                 leading: const Icon(Icons.mail),
                 title: const Text("メールアドレス変更"),
                 onTap: () => {
-                      // signOut(),
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => const Home(),
-                      //     ))
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChangeEmail(),
+                          ))
                     }),
             ListTile(
                 leading: const Icon(Icons.enhanced_encryption),
                 title: const Text("パスワード変更"),
                 onTap: () => {
-                      // signOut(),
-                      // Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => const Home(),
-                      //     ))
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const ChangePassword(),
+                          ))
                     }),
             ListTile(
                 leading: const Icon(Icons.logout),
